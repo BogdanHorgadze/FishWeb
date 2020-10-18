@@ -1,0 +1,18 @@
+.navigation-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    height: 100px;
+
+    &_link {
+        font-family: 'Century Gothic Bold';
+        font-size: $navbar-text-size;
+        color: $primary-text-color;
+        margin-right: 55px;
+
+        &:hover {
+            color: $accent-text-color;
+        }
+    }
+}
