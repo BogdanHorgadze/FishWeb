@@ -1,0 +1,21 @@
+.navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    height: 100px;
+
+    & .navbar-item {
+        font-family: 'Century Gothic Bold';
+        font-size: $navbar-text-size;
+        color: $primary-text-color;
+        margin-right: 55px;
+    }
+    
+    & .navbar-link {
+        color: inherit;
+        &:hover {
+            color: $accent-text-color;
+        }
+    }
+}
