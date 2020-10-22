@@ -2,7 +2,7 @@
 
 .header {
     background-color: $black;
-    .header-wrap {
+    & .header-wrap {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -17,5 +17,12 @@
                 background-image: url('../../assets/img/cart-hover.svg');
             }
         }
+    }
+
+    & .left-side {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 20%;
     }
 }
