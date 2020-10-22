@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
+import styles from './dropdown.module.scss'
 
 export const DropDown = (props) => {
-    const dropdownRef = useRef(null)
-    const dropdownItemRef = useRef(null)
-
     const [visibility, setVisibility] = useState(false)
+    const dropdownRef = useRef()
+    const menuRef = useRef()
+
     useEffect(() => {
-        dropdownRef.current.querySelector('.dropdown-menu').classList.toggle('visible', visibility);
+        let display;
+        visibility ? display = 'flex' : display = 'none'
+        menuRef.current.style.display = display;
     }, [visibility])
 
     useEffect(() => {
@@ -20,13 +23,17 @@ export const DropDown = (props) => {
     const handleOpen = () => {
         setVisibility(true)
     }
+
     
     return (
-        <div className='dropdown' ref={dropdownRef} onMouseEnter={handleOpen}>
-            <div className='dropdown-text' ref={dropdownItemRef}>
+        <div className={styles.dropdown} ref={dropdownRef} onMouseEnter={handleOpen}>
+            <div className={styles.text}>
                 {props.text}
             </div>
-            {props.children}
+            {React.cloneElement(
+                React.Children.only(props.children),
+                {ref: menuRef}
+            )}
         </div>
     )
 
