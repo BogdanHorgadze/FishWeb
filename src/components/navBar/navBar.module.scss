@@ -1,3 +1,5 @@
+@import '../../assets/scss/variables';
+
 .navbar {
     display: flex;
     justify-content: center;
@@ -5,17 +7,17 @@
     border: 1px solid black;
     height: 100px;
 
-    & .navbar-item {
+    & .item {
         font-family: 'Century Gothic Bold';
         font-size: $navbar-text-size;
-        color: $primary-text-color;
+        color: $white;
         margin-right: 55px;
     }
     
-    & .navbar-link {
+    & .link {
         color: inherit;
         &:hover {
-            color: $accent-text-color;
+            color: $accent-color;
         }
     }
 }
