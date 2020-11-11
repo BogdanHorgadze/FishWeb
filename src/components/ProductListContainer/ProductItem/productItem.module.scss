@@ -1,0 +1,44 @@
+@import '../../../assets/scss/variables';
+
+.product-item {
+    display: flex;
+    flex-direction: column;
+    width: 24%;
+    height: 480px;
+    margin-top: 50px;
+    background-color: $white;
+
+    & .image-wrap {
+        //border: 1px solid black;
+        width: 100%;
+        height: 410px;
+
+        & .img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    }
+    
+    & .main {
+        display: flex;;
+        flex-direction: column;
+        width: 100%;
+        height: 70px;
+        margin-left: 5px;
+
+        & .title {
+            font-family: 'Google Sans';
+            font-weight: 700;
+            font-size: $p-title-text-size;
+            margin-top: 7px;
+        }
+
+        & .price {
+            font-family: 'Google Sans';
+            font-weight: 700;
+            font-size: $price-text-size;
+            color: $accent-color;
+        }
+    }
+}

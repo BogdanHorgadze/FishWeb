@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './header.module.scss'
-import { NavBar } from '../NavBar/NavBar'
+import { NavBar } from '../NavBar'
 import { Logo } from '../Logo/Logo'
 import { Search } from '../Search/Search'
 
