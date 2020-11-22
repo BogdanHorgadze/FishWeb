@@ -2,9 +2,9 @@ import React from 'react';
 import styles from './navBar.module.scss'
 import { NavLink } from 'react-router-dom';
 import { NavBarItem } from './NavBarItem';
-import { DropDown } from '../UI/Dropdown/DropDown';
-import { DropDownMenu } from '../UI/Dropdown/DropdownMenu'
-import { DropDownItem } from '../UI/Dropdown/DropDownItem';
+import { DropDown } from '../../UI/Dropdown/DropDown';
+import { DropDownMenu } from '../../UI/Dropdown/DropdownMenu'
+import { DropDownItem } from '../../UI/Dropdown/DropDownItem';
 
 export const NavBar = () => {
     return (

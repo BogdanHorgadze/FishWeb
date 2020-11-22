@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './search.module.scss'
-import search from '../../assets/img/search.svg'
+import search from '../../../assets/img/search.svg'
 
 export const Search = () => {
     return (

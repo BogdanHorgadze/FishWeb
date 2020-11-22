@@ -3,13 +3,14 @@
 .product-item {
     display: flex;
     flex-direction: column;
-    width: 24%;
+    //width: 24%;
+    width: 270px;
     height: 480px;
-    margin-top: 50px;
+    margin-bottom: 50px;
+    margin: 0 10px 20px;
     background-color: $white;
 
     & .image-wrap {
-        //border: 1px solid black;
         width: 100%;
         height: 410px;
 
@@ -40,5 +41,9 @@
             font-size: $price-text-size;
             color: $accent-color;
         }
+    }
+
+    @media screen and (max-width: 1100px) {
+        // width: 30%;
     }
 }
