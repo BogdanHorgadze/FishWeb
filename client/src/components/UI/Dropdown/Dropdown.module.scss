@@ -1,0 +1,47 @@
+.dropdown {
+    display: flex;
+    align-items: center;
+    position: relative;
+    & .text {
+        cursor: pointer;
+    }
+
+    & .item {
+        height: 40px;
+        padding-left: 15px;
+        line-height: 40px;
+        border-bottom: 1px solid #80808036;
+        cursor: pointer;
+        color:gray;
+        & .menu {
+            top: 0;
+            left: 175px;
+        }
+
+        &:hover {
+            background-color: #ddd;
+            font-size: 15px;
+        }
+    }
+
+    & .menu {
+        font-family: 'Century Gothic';
+        position: absolute;
+        top: 48px;
+        display: none;
+        flex-direction: column;
+        width: 190px;
+        background-color: #f5f5f5;
+        box-shadow: 0 8px 6px -6px #00000042;
+    }
+
+    & .visible {
+        display: flex;
+        z-index: 1000;
+    }
+}
+
+
+
+
+

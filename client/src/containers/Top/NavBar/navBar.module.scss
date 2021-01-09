@@ -1,0 +1,30 @@
+@import '../../../assets/scss/variables';
+
+.navbar {
+    background: none;
+    border-bottom:none;
+    margin: 15px 10px 10px 10px;
+        li{
+            display: inline-flex;
+            margin-left: 80px;
+            color:white;
+            &:first-child{
+                margin-left: 20px;
+            }
+            a{
+                color:white !important;
+               font-size:18px;
+                &:hover{
+                    color:gray;
+                    transition: all 0.5s ease;
+                }
+            }
+        } 
+}
+
+
+@media (max-width: 420px) {
+    .navbar{
+        font-size: 30px;
+    }
+}

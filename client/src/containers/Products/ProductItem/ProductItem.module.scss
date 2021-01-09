@@ -1,0 +1,19 @@
+.product{
+  margin-left: 80px;
+  img {
+    width: 300px;
+  }
+  .info{
+    display: flex;
+    justify-content: center;
+  }
+  input{
+    width:24px;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .product{
+    margin-left: 43px;
+  }
+}
