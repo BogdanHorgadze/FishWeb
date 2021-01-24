@@ -1,8 +1,18 @@
+import {
+  SETPRODUCTS,
+  SEARCH,
+  ADDTOCART,
+  DELETEFROMCART,
+  SETFILTERPRODUCTS,
+  TOTALPRICE,
+  CORRECTNUMBER,
+  REFRESH,
+  END,
+} from './actionsTypes'
 import axios from 'axios'
 import { Dispatch } from 'react'
 import { product } from '../../Interfaces/Interfaces'
 import { AppState } from '../reducers/rootReducer'
-import { SETPRODUCTS, SEARCH, ADDTOCART, DELETEFROMCART, SETFILTERPRODUCTS, TOTALPRICE, SETMODALCART } from './actionsTypes'
 
 type dispatchType = Dispatch<ActionsTypes>
 
@@ -41,7 +51,7 @@ export const buyThunk =
           initialValue
         );
 
-       
+
         dispatch(setTotalPrice(totalPrice))
         dispatch(setProducts(products))
         dispatch(addToCart(cart))
@@ -61,7 +71,7 @@ export const buyThunk =
           initialValue
         );
 
-        
+
         dispatch(setTotalPrice(totalPrice))
         dispatch(deleteFromCart(cart))
         dispatch(setProducts(products))
@@ -73,7 +83,7 @@ export const orderThunk = (phoneNumber: string) => {
   return async (dispatch: dispatchType, getState: () => AppState) => {
     const cart = getState().mainReducer.cart
     const totalPrice = getState().mainReducer.totalPrice
-    await axios.post('http://localhost:5000/api/order', { phoneNumber, cart , totalPrice })
+    await axios.post('http://localhost:5000/api/order', { phoneNumber, cart, totalPrice })
   }
 }
 
@@ -150,6 +160,41 @@ export const setFilterProducts = (products: Array<product>): setFilterProductsTy
   }
 }
 
+type setCorrectNumberType = {
+  type : typeof CORRECTNUMBER,
+  payload : boolean
+}
+
+export const setCorrectNumber = (payload : boolean) : setCorrectNumberType => {
+  return {
+    type : CORRECTNUMBER,
+    payload
+  }
+}
+
+type setIsEndType = {
+  type : typeof END
+  payload : boolean
+}
+
+export const setIsEnd = (payload : boolean) : setIsEndType => {
+  return {
+    type: END,
+    payload
+  }
+}
+
+type refreshType = {
+  type : typeof REFRESH
+  payload : boolean
+}
+
+export const refresh = (payload : boolean) : refreshType => {
+  return {
+    type: REFRESH,
+    payload
+  }
+}
 
 export type ActionsTypes =
   setProductsType |
@@ -157,4 +202,7 @@ export type ActionsTypes =
   addToCartType |
   deleteFromCartType |
   setFilterProductsType |
-  setTotalPriceType 
+  setTotalPriceType |
+  setCorrectNumberType |
+  setIsEndType |
+  refreshType

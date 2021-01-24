@@ -1,4 +1,15 @@
-import { ADDTOCART, SEARCH, SETPRODUCTS, DELETEFROMCART, SETFILTERPRODUCTS, TOTALPRICE, SETMODALCART } from "../actions/actionsTypes";
+import {
+  ADDTOCART,
+  SEARCH,
+  SETPRODUCTS,
+  DELETEFROMCART,
+  SETFILTERPRODUCTS,
+  TOTALPRICE,
+  REFRESH,
+  END,
+  CORRECTNUMBER
+}
+  from "../actions/actionsTypes";
 import { ActionsTypes } from "../actions/actions";
 import { product } from "../../Interfaces/Interfaces";
 
@@ -9,6 +20,8 @@ interface IMain {
   cart: Array<product>
   filterProducts: Array<product>
   totalPrice: number
+  isCorrectPhone: boolean
+  isEnd: boolean
 }
 
 const initialState = {
@@ -16,7 +29,9 @@ const initialState = {
   isSearch: false,
   cart: [],
   filterProducts: [],
-  totalPrice: 0
+  totalPrice: 0,
+  isCorrectPhone: false,
+  isEnd: false
 }
 
 export default function mainReducer(state: IMain = initialState, action: ActionsTypes) {
@@ -31,8 +46,14 @@ export default function mainReducer(state: IMain = initialState, action: Actions
       return { ...state, cart: [...action.products] }
     case SETFILTERPRODUCTS:
       return { ...state, filterProducts: [...action.products] }
-    case TOTALPRICE :
-      return {...state , totalPrice : action.price}
+    case TOTALPRICE:
+      return { ...state, totalPrice: action.price }
+    case END:
+      return { ...state, isEnd: action.payload }
+    case CORRECTNUMBER:
+      return { ...state, isCorrectPhone: action.payload }
+    case REFRESH:
+      return { ...state, totalPrice: 0, cart: [], isEnd : action.payload, isCorrectPhone: action.payload }
     default:
       return state
   }

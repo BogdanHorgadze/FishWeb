@@ -2,11 +2,12 @@ import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from "react-router-dom";
 import { product } from '../../Interfaces/Interfaces';
-import { buyThunk, getProducts, orderThunk } from '../../store/actions/actions'
+import { buyThunk, getProducts, orderThunk, setIsEnd, setCorrectNumber, refresh, setFilterProducts } from '../../store/actions/actions'
 import { BiPlus } from "react-icons/bi";
 import { AiOutlineMinus } from "react-icons/ai";
 import { AppState } from '../../store/reducers/rootReducer';
-import { Modal } from 'antd';
+import { Modal, Row, Col } from 'antd';
+
 
 type Params = {
   productId: string
@@ -21,11 +22,15 @@ const DetailProduct: React.FC = () => {
   const [product, setProduct] = useState<product>()
   const [size, setSize] = useState<string>('')
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isOrder, setIsOrder] = useState(false);
-  const [isEnd, setIsEnd] = useState(false)
+  const isCorrectPhone = useSelector((state: AppState) => state.mainReducer.isCorrectPhone)
+  const isEnd = useSelector((state: AppState) => state.mainReducer.isEnd)
   const [isFooter, setIsFooter] = useState({})
   const phoneValue = useRef<any>(null)
   const regPhone = /^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/
+
+  useEffect(() => {
+    dispatch(setFilterProducts([]))
+  },[])
 
   useEffect(() => {
     const product = products.filter(item => item._id === productId)
@@ -38,9 +43,11 @@ const DetailProduct: React.FC = () => {
   useEffect(() => {
     if (isEnd) {
       setIsFooter({ footer: null })
+    } else {
+      setIsFooter({})
     }
   }, [isEnd])
-
+ 
   const buyHandler = (action: string) => {
     if (size) {
       dispatch(buyThunk(product?._id, action, size))
@@ -65,17 +72,27 @@ const DetailProduct: React.FC = () => {
     if (cart.length) {
       return cart.map((item, i) => {
         return (
-          <div key={`item` + i}>
-            {item.name}
-            <span>{item.count} </span>
-            <span>{
-              item.selectedSize.map((size, i) => {
-                return (
-                  <span key={`size` + i}> {size} </span>
-                )
-              })
-            }</span>
-            <span>цена : {+item.count * +item.price}</span>
+          <div key={`item` + i} style={{ marginTop: '10px' }}>
+            <Row>
+              <Col sm={6}>
+                <div>{item.name}</div>
+              </Col>
+              <Col sm={6}>
+                <span style={{ marginLeft: '30px' }}>{item.count} </span>
+              </Col>
+              <Col sm={6}>
+                <span>{
+                  item.selectedSize.map((size, i) => {
+                    return (
+                      <div style={{ marginLeft: '10px' }} key={`size` + i}> {size} </div>
+                    )
+                  })
+                }</span>
+              </Col>
+              <Col sm={6}>
+                <span>{+item.count * +item.price}грн</span>
+              </Col>
+            </Row>
           </div>
         )
       })
@@ -84,17 +101,20 @@ const DetailProduct: React.FC = () => {
 
   const handleOk = () => {
     if (cart.length) {
-      setIsOrder(true)
+      dispatch(setCorrectNumber(true))
     }
-    if (isOrder && regPhone.test(phoneValue.current!.value) && cart.length) {
+    if (isCorrectPhone && regPhone.test(phoneValue.current!.value) && cart.length) {
       dispatch(orderThunk(phoneValue.current?.value))
-      setIsEnd(true)
+      dispatch(setIsEnd(true))
     }
   };
 
   const handleCancel = () => {
-    setIsOrder(false)
     setIsModalVisible(false);
+    if (isEnd) {
+      dispatch(getProducts())
+      dispatch(refresh(false))
+    }
   };
 
   return (
@@ -114,7 +134,7 @@ const DetailProduct: React.FC = () => {
           <span onClick={() => buyHandler('add')}><BiPlus /></span>
         </div>
       }
-      <Modal title={isOrder ? 'Оформление заказа' : 'Корзина'}
+      <Modal title={isCorrectPhone ? 'Оформление заказа' : 'Корзина'}
         width={1000}
         visible={isModalVisible}
         onOk={handleOk}
@@ -126,19 +146,35 @@ const DetailProduct: React.FC = () => {
         {
           !size
             ? 'выберите размер'
-            : isOrder
+            : isCorrectPhone
               ? isEnd
-                ? 'Cпасибо за покупку. Мы с вами свяжемся'
+                ? <div style={{ paddingBottom: '20px' }}>Cпасибо за покупку. Мы с вами свяжемся</div>
                 : <div>
                   <input ref={phoneValue} id="form" type="text" />
-                  <label htmlFor="form">Номер телефона</label>
+                  <label style={{ marginLeft: '5px' }} htmlFor="form">Номер телефона</label>
                 </div>
               : <div>
+                <Row>
+                  <Col xs={4} sm={6}>
+                    Название
+                     </Col>
+                  <Col xs={4} sm={6}>
+                    Количество
+                    </Col>
+                  <Col xs={6} sm={6}>
+                    Размеры
+                   </Col>
+                  <Col xs={2} sm={6}>
+                    Цена
+                   </Col>
+                </Row>
                 {renderCart()}
-                {totalPrice
-                  ? <div>Цена :{totalPrice}</div>
-                  : null
-                }
+                <div style={{ marginTop: '30px', fontWeight: 'bold' }}>
+                  {totalPrice
+                    ? <div>Общая цена :{totalPrice}грн</div>
+                    : null
+                  }
+                </div>
               </div>
         }
       </Modal>
