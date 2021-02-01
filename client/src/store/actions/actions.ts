@@ -5,6 +5,7 @@ import {
   DELETEFROMCART,
   SETFILTERPRODUCTS,
   TOTALPRICE,
+  DELETEFULLITEM,
   CORRECTNUMBER,
   REFRESH,
   END,
@@ -87,6 +88,26 @@ export const orderThunk = (phoneNumber: string) => {
   }
 }
 
+export const deleteFullItemThunk = (id: string) => {
+  return (dispatch: dispatchType, getState: () => AppState) => {
+    const cart = getState().mainReducer.cart
+    let totalPrice = getState().mainReducer.totalPrice
+    const products = getState().mainReducer.products
+
+    const filteredCart = cart.filter(item => item._id !== id)
+
+    products.forEach(item => {
+      if (item._id === id) {
+        totalPrice = totalPrice - +item.price
+        item.count = 0
+        item.selectedSize = []
+      }
+    })
+
+    dispatch(deleteFullItem(filteredCart, totalPrice, products))
+  }
+}
+
 type setTotalPriceType = {
   type: typeof TOTALPRICE,
   price: number
@@ -161,23 +182,23 @@ export const setFilterProducts = (products: Array<product>): setFilterProductsTy
 }
 
 type setCorrectNumberType = {
-  type : typeof CORRECTNUMBER,
-  payload : boolean
+  type: typeof CORRECTNUMBER,
+  payload: boolean
 }
 
-export const setCorrectNumber = (payload : boolean) : setCorrectNumberType => {
+export const setCorrectNumber = (payload: boolean): setCorrectNumberType => {
   return {
-    type : CORRECTNUMBER,
+    type: CORRECTNUMBER,
     payload
   }
 }
 
 type setIsEndType = {
-  type : typeof END
-  payload : boolean
+  type: typeof END
+  payload: boolean
 }
 
-export const setIsEnd = (payload : boolean) : setIsEndType => {
+export const setIsEnd = (payload: boolean): setIsEndType => {
   return {
     type: END,
     payload
@@ -185,14 +206,31 @@ export const setIsEnd = (payload : boolean) : setIsEndType => {
 }
 
 type refreshType = {
-  type : typeof REFRESH
-  payload : boolean
+  type: typeof REFRESH
+  payload: boolean
 }
 
-export const refresh = (payload : boolean) : refreshType => {
+export const refresh = (payload: boolean): refreshType => {
   return {
     type: REFRESH,
     payload
+  }
+}
+
+type deleteFullItemType = {
+  type: typeof DELETEFULLITEM
+  cart: Array<product>
+  totalPrice: number
+  products: Array<product>
+
+}
+
+export const deleteFullItem = (cart: Array<product>, totalPrice: number, products: Array<product>): deleteFullItemType => {
+  return {
+    type: DELETEFULLITEM,
+    cart,
+    totalPrice,
+    products,
   }
 }
 
@@ -205,4 +243,5 @@ export type ActionsTypes =
   setTotalPriceType |
   setCorrectNumberType |
   setIsEndType |
-  refreshType
+  refreshType |
+  deleteFullItemType

@@ -1,18 +1,18 @@
 export interface product {
   id: string;
-  _id: String
-  cloth?: String
-  composition?: String
-  density?: String
-  descr? : String
-  img?: String
-  impregnation?: String
-  lining?: String
-  name: String
-  count: String | number
-  price: String
-  resistance?: String
+  _id: string
+  cloth?: string
+  composition?: string
+  density?: string
+  descr? : string
+  img?: string
+  impregnation?: string
+  lining?: string
+  name: string
+  count: string | number
+  price: string
+  resistance?: string
   size: string
-  vapor?: String
+  vapor?: string
   selectedSize: Array<String>
 }
