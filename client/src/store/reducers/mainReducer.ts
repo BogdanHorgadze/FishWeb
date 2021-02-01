@@ -5,6 +5,7 @@ import {
   DELETEFROMCART,
   SETFILTERPRODUCTS,
   TOTALPRICE,
+  DELETEFULLITEM,
   REFRESH,
   END,
   CORRECTNUMBER
@@ -12,6 +13,7 @@ import {
   from "../actions/actionsTypes";
 import { ActionsTypes } from "../actions/actions";
 import { product } from "../../Interfaces/Interfaces";
+import { act } from "react-dom/test-utils";
 
 
 interface IMain {
@@ -53,7 +55,9 @@ export default function mainReducer(state: IMain = initialState, action: Actions
     case CORRECTNUMBER:
       return { ...state, isCorrectPhone: action.payload }
     case REFRESH:
-      return { ...state, totalPrice: 0, cart: [], isEnd : action.payload, isCorrectPhone: action.payload }
+      return { ...state, totalPrice: 0, cart: [], isEnd: action.payload, isCorrectPhone: action.payload }
+    case DELETEFULLITEM:
+      return { ...state, cart: [...action.cart], totalPrice : action.totalPrice, products: [...action.products] }
     default:
       return state
   }

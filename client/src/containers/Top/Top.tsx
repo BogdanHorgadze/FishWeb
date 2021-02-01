@@ -9,7 +9,8 @@ import { Logo } from './Logo/Logo'
 import { Search } from './Search/Search'
 import { FaShoppingCart } from "react-icons/fa";
 import { AppState } from '../../store/reducers/rootReducer';
-import { orderThunk, getProducts, setCorrectNumber, setIsEnd, refresh } from '../../store/actions/actions'
+import { orderThunk, getProducts, setCorrectNumber, setIsEnd, refresh, deleteFullItemThunk } from '../../store/actions/actions'
+import { CloseCircleOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 
 import { Layout } from 'antd';
 import { Row, Col, Modal } from 'antd';
@@ -34,7 +35,7 @@ const Top = () => {
             setIsFooter({})
         }
     }, [isEnd])
-    
+
     const showModal = () => {
         setIsModalVisible(true);
     };
@@ -56,6 +57,10 @@ const Top = () => {
             dispatch(refresh(false))
         }
     };
+
+    const clearCart = (id: string) => {
+        dispatch(deleteFullItemThunk(id))
+    }
 
     const renderCart = () => {
         if (cart.length) {
@@ -94,8 +99,13 @@ const Top = () => {
                                             })
                                         }</span>
                                     </Col>
-                                    <Col sm={6}>
+                                    <Col sm={4}>
                                         <span>{+item.count * +item.price}грн</span>
+                                    </Col>
+                                    <Col sm={2}>
+                                        <span onClick={() => clearCart(item._id)} style={{ cursor: 'pointer' }}>
+                                            <CloseCircleOutlined />
+                                        </span>
                                     </Col>
                                 </Row>
                             </div>
@@ -143,6 +153,9 @@ const Top = () => {
                         ? isEnd
                             ? <div style={{ paddingBottom: '20px' }}>Cпасибо за покупку. Мы с вами свяжемся</div>
                             : <div>
+                                <div >
+                                    <ArrowLeftOutlined onClick={() => dispatch(setCorrectNumber(false))} style={{ cursor: 'pointer', paddingBottom: '30px' }} />
+                                </div>
                                 <input ref={phoneValue} id="form" type="text" />
                                 <label htmlFor="form">Номер телефона</label>
                             </div>

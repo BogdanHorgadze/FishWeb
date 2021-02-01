@@ -2,12 +2,12 @@ import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from "react-router-dom";
 import { product } from '../../Interfaces/Interfaces';
-import { buyThunk, getProducts, orderThunk, setIsEnd, setCorrectNumber, refresh, setFilterProducts } from '../../store/actions/actions'
+import { buyThunk, deleteFullItemThunk, getProducts, orderThunk, setIsEnd, setCorrectNumber, refresh, setFilterProducts } from '../../store/actions/actions'
 import { BiPlus } from "react-icons/bi";
 import { AiOutlineMinus } from "react-icons/ai";
 import { AppState } from '../../store/reducers/rootReducer';
 import { Modal, Row, Col } from 'antd';
-
+import { CloseCircleOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 
 type Params = {
   productId: string
@@ -30,7 +30,7 @@ const DetailProduct: React.FC = () => {
 
   useEffect(() => {
     dispatch(setFilterProducts([]))
-  },[])
+  }, [])
 
   useEffect(() => {
     const product = products.filter(item => item._id === productId)
@@ -47,7 +47,7 @@ const DetailProduct: React.FC = () => {
       setIsFooter({})
     }
   }, [isEnd])
- 
+
   const buyHandler = (action: string) => {
     if (size) {
       dispatch(buyThunk(product?._id, action, size))
@@ -66,6 +66,10 @@ const DetailProduct: React.FC = () => {
         </div>
       )
     })
+  }
+
+  const clearCart = (id: string) => {
+    dispatch(deleteFullItemThunk(id))
   }
 
   const renderCart = () => {
@@ -89,8 +93,13 @@ const DetailProduct: React.FC = () => {
                   })
                 }</span>
               </Col>
-              <Col sm={6}>
+              <Col sm={4}>
                 <span>{+item.count * +item.price}грн</span>
+              </Col>
+              <Col sm={2}>
+                <span onClick={() => clearCart(item._id)} style={{ cursor: 'pointer' }}>
+                  <CloseCircleOutlined />
+                </span>
               </Col>
             </Row>
           </div>
@@ -150,8 +159,11 @@ const DetailProduct: React.FC = () => {
               ? isEnd
                 ? <div style={{ paddingBottom: '20px' }}>Cпасибо за покупку. Мы с вами свяжемся</div>
                 : <div>
+                  <div>
+                    <ArrowLeftOutlined onClick={()=> dispatch(setCorrectNumber(false))} style={{ cursor: 'pointer', paddingBottom:'30px' }} />
+                  </div>
+                  <label style={{ marginRight: '5px' }} htmlFor="form">Номер телефона :</label>
                   <input ref={phoneValue} id="form" type="text" />
-                  <label style={{ marginLeft: '5px' }} htmlFor="form">Номер телефона</label>
                 </div>
               : <div>
                 <Row>
