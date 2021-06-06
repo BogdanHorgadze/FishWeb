@@ -14,6 +14,7 @@ import axios from 'axios'
 import { Dispatch } from 'react'
 import { product } from '../../Interfaces/Interfaces'
 import { AppState } from '../reducers/rootReducer'
+import { OrderInitialValue } from '../../containers/OrderPage/types'
 
 type dispatchType = Dispatch<ActionsTypes>
 
@@ -80,14 +81,6 @@ export const buyThunk =
     }
   }
 
-export const orderThunk = (phoneNumber: string) => {
-  return async (dispatch: dispatchType, getState: () => AppState) => {
-    const cart = getState().mainReducer.cart
-    const totalPrice = getState().mainReducer.totalPrice
-    await axios.post('http://localhost:5000/api/order', { phoneNumber, cart, totalPrice })
-  }
-}
-
 export const deleteFullItemThunk = (id: string) => {
   return (dispatch: dispatchType, getState: () => AppState) => {
     const cart = getState().mainReducer.cart
@@ -105,6 +98,14 @@ export const deleteFullItemThunk = (id: string) => {
     })
 
     dispatch(deleteFullItem(filteredCart, totalPrice, products))
+  }
+}
+
+export const createOrder = (userInfo: OrderInitialValue) => {
+  return async (dispatch: dispatchType, getState: () => AppState) => {
+    const cart = getState().mainReducer.cart
+    const totalPrice = getState().mainReducer.totalPrice
+    await axios.post('http://localhost:5000/api/order', { userInfo, cart, totalPrice })
   }
 }
 

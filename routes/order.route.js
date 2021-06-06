@@ -2,7 +2,8 @@ const { Router } = require('express')
 const router = Router()
 const nodemailer = require('nodemailer')
 const message = require('../email/message')
-const Products = require('../models/Products')
+const Order = require('../models/Order')
+
 require('dotenv').config()
 
 
@@ -15,25 +16,18 @@ let transporter = nodemailer.createTransport({
 })
 
 router.post('/order', async (req, res) => {
-  // const product = new Products({
-  //   name: req.body.name,
-  //   descr: req.body.descr,
-  //   img: req.body.img,
-  //   size: req.body.size,
-  //   price: req.body.price,
-  //   composition: req.body.composition,
-  //   density: req.body.density,
-  //   resistance: req.body.resistance,
-  //   vapor: req.body.vapor,
-  //   treatment : req.body.treatment,
-  //   cloth : req.body.cloth,
-  //   lining : req.body.lining,
-  //   impregnation:req.body.impregnation
-  // })
-  // await product.save()
-  // res.json({ message: 'create' })
-  const { phoneNumber , cart , totalPrice } = req.body
-  await transporter.sendMail(message(process.env.EMAIL, phoneNumber , cart , totalPrice), function (err, data) {
+  const { userInfo , cart , totalPrice } = req.body
+  console.log("🚀 ~ file: order.route.js ~ line 20 ~ router.post ~ totalPrice", totalPrice)
+  console.log("🚀 ~ file: order.route.js ~ line 20 ~ router.post ~ cart", cart)
+  console.log("🚀 ~ file: order.route.js ~ line 20 ~ router.post ~ userInfo", userInfo)
+
+  const order = new Order({
+    ...userInfo,
+    products: [...cart]
+  })
+  await order.save()
+
+  await transporter.sendMail(message(process.env.EMAIL, userInfo.phone , cart , totalPrice), function (err, data) {
     if (err) {
       console.log(err)
     } else {
