@@ -6,6 +6,7 @@ import Top from "./containers/Top/Top";
 import Products from "./containers/Products/Products";
 import { Layout } from "antd";
 import OrderPage from "./containers/OrderPage";
+import ContactUs from "./containers/ContactUs";
 const { Content } = Layout;
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
           <Switch>
             <Route exact path="/" />
             <Route exact path="/about" />
-            <Route exact path="/contacts" />
+            <Route exact path="/contacts" component={ContactUs} />
             <Route
               exact
               path="/products/:productId"

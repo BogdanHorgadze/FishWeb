@@ -2,24 +2,24 @@ const { Router } = require('express')
 const router = Router()
 const nodemailer = require('nodemailer')
 const message = require('../email/message')
+const contact = require('../email/contact')
 const Order = require('../models/Order')
 
 require('dotenv').config()
 
 
 let transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD
-  }
+  },
 })
 
 router.post('/order', async (req, res) => {
   const { userInfo , cart , totalPrice } = req.body
-  console.log("🚀 ~ file: order.route.js ~ line 20 ~ router.post ~ totalPrice", totalPrice)
-  console.log("🚀 ~ file: order.route.js ~ line 20 ~ router.post ~ cart", cart)
-  console.log("🚀 ~ file: order.route.js ~ line 20 ~ router.post ~ userInfo", userInfo)
 
   const order = new Order({
     ...userInfo,
@@ -28,6 +28,19 @@ router.post('/order', async (req, res) => {
   await order.save()
 
   await transporter.sendMail(message(process.env.EMAIL, userInfo.phone , cart , totalPrice), function (err, data) {
+    if (err) {
+      console.log(err)
+    } else {
+      console.log(data, 'email sent')
+      res.json({ message: 'sent' })
+    }
+  })
+})
+
+router.post('/contact-us', async(req, res) => {
+  const {body: {email, text}} = req
+
+  await transporter.sendMail(contact(email, text), function (err, data) {
     if (err) {
       console.log(err)
     } else {

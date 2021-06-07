@@ -15,15 +15,19 @@ import {
   setIsEnd,
   refresh,
   deleteFullItemThunk,
+  buyThunk,
 } from "../../store/actions/actions";
 import { CloseCircleOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 
 import { Layout } from "antd";
 import { Row, Col, Modal } from "antd";
+import Cart from "../../components/Cart";
+import { useHistory } from "react-router-dom";
 const { Header } = Layout;
 
 const Top = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const isSearch = useSelector((state: AppState) => state.mainReducer.isSearch);
   const cart = useSelector((state: AppState) => state.mainReducer.cart);
   const totalPrice: number = useSelector(
@@ -52,85 +56,23 @@ const Top = () => {
 
   const handleOk = () => {
     if (cart.length) {
-      dispatch(setCorrectNumber(true));
-    }
-    if (isCorrectPhone && regPhone.test(phoneValue.current!.value)) {
-      // dispatch(orderThunk(phoneValue.current?.value))
+      history.push("/order");
       dispatch(setIsEnd(true));
     }
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    if (isEnd) {
-      dispatch(getProducts());
-      dispatch(refresh(false));
-    }
+    // if (isEnd) {
+    //   dispatch(getProducts());
+    //   dispatch(refresh(false));
+    // }
   };
 
-  const clearCart = (id: string) => {
-    dispatch(deleteFullItemThunk(id));
-  };
-
-  const renderCart = () => {
-    if (cart.length) {
-      return (
-        <div>
-          <Row>
-            <Col xs={4} sm={6}>
-              Название
-            </Col>
-            <Col xs={4} sm={6}>
-              Количество
-            </Col>
-            <Col xs={6} sm={6}>
-              Размеры
-            </Col>
-            <Col xs={2} sm={6}>
-              Цена
-            </Col>
-          </Row>
-          {cart.map((item, i) => {
-            return (
-              <div key={`item` + i} style={{ marginTop: "10px" }}>
-                <Row>
-                  <Col sm={6}>
-                    <div>{item.name}</div>
-                  </Col>
-                  <Col sm={6}>
-                    <span style={{ marginLeft: "30px" }}>{item.count} </span>
-                  </Col>
-                  <Col sm={6}>
-                    <span>
-                      {item.selectedSize.map((size, i) => {
-                        return (
-                          <div style={{ marginLeft: "10px" }} key={`cart` + i}>
-                            {" "}
-                            {size}{" "}
-                          </div>
-                        );
-                      })}
-                    </span>
-                  </Col>
-                  <Col sm={4}>
-                    <span>{+item.count * +item.price}грн</span>
-                  </Col>
-                  <Col sm={2}>
-                    <span
-                      onClick={() => clearCart(item._id)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <CloseCircleOutlined />
-                    </span>
-                  </Col>
-                </Row>
-              </div>
-            );
-          })}
-        </div>
-      );
-    } else {
-      return "пусто";
+  const buyHandler = (action: string, id?: string, size?: string) => {
+    if (id && size) {
+      dispatch(buyThunk(id, action, size));
+      setIsModalVisible(true);
     }
   };
 
@@ -161,33 +103,13 @@ const Top = () => {
         onCancel={handleCancel}
         okText="Заказать"
         cancelText="Продолжить"
-        {...isFooter}
       >
-        {isCorrectPhone ? (
-          isEnd ? (
-            <div style={{ paddingBottom: "20px" }}>
-              Cпасибо за покупку. Мы с вами свяжемся
-            </div>
-          ) : (
-            <div>
-              <div>
-                <ArrowLeftOutlined
-                  onClick={() => dispatch(setCorrectNumber(false))}
-                  style={{ cursor: "pointer", paddingBottom: "30px" }}
-                />
-              </div>
-              <input ref={phoneValue} id="form" type="text" />
-              <label htmlFor="form">Номер телефона</label>
-            </div>
-          )
-        ) : (
-          <div>
-            {renderCart()}
-            <div style={{ marginTop: "30px", fontWeight: "bold" }}>
-              {totalPrice ? <div>Общая цена :{totalPrice}грн</div> : null}
-            </div>
-          </div>
-        )}
+        <Cart
+          cart={cart}
+          totalPrice={totalPrice}
+          closeModal={() => setIsModalVisible(false)}
+          secondHandler={buyHandler}
+        />
       </Modal>
     </Header>
   );

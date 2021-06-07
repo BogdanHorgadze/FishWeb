@@ -1,7 +1,6 @@
 .root {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   max-width: 1024px;
   width: 100%;
   padding-top: 50px;
@@ -10,10 +9,6 @@
 
   & h1 {
     font-size: 34px;
-  }
-
-  & .content {
-    display: flex;
   }
 
   & .from-wrapper {
@@ -27,9 +22,17 @@
     }
 
     & .button {
+      background-color: #4caf50; /* Green */
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+      width: 200px;
       margin-top: 20px;
-      max-width: 300px;
-      width: 100%;
+      cursor: pointer;
     }
   }
 }

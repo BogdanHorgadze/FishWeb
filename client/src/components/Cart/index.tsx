@@ -8,14 +8,15 @@ import {
 } from "@ant-design/icons";
 
 import { product } from "../../Interfaces/Interfaces";
-import { deleteFullItemThunk } from "../../store/actions/actions";
+import { buyThunk, deleteFullItemThunk } from "../../store/actions/actions";
 import styles from "./styles.module.scss";
 
 type Props = {
   cart: Array<product>;
   totalPrice: number;
   closeModal: () => void;
-  onChangeProductAmount: (action: string) => void;
+  onChangeProductAmount?: (action: string) => void;
+  secondHandler?: (action: string, id: string, size: string) => void;
 };
 
 const Cart = ({
@@ -23,6 +24,7 @@ const Cart = ({
   totalPrice,
   closeModal,
   onChangeProductAmount,
+  secondHandler,
 }: Props) => {
   const dispatch = useDispatch();
 
@@ -35,6 +37,7 @@ const Cart = ({
   const clearCart = (id: string) => {
     dispatch(deleteFullItemThunk(id));
   };
+
   return (
     <div>
       <Row>
@@ -61,15 +64,43 @@ const Cart = ({
               </Col>
               <Col sm={6}>
                 <div className={styles["amount-wrapper"]}>
-                  <PlusOutlined
-                    onClick={() => onChangeProductAmount("add")}
-                    style={{ marginRight: "20px", cursor: "pointer" }}
-                  />
+                  {onChangeProductAmount && (
+                    <PlusOutlined
+                      onClick={() => onChangeProductAmount("add")}
+                      style={{ marginRight: "20px", cursor: "pointer" }}
+                    />
+                  )}
+                  {secondHandler && (
+                    <PlusOutlined
+                      onClick={() =>
+                        secondHandler(
+                          "add",
+                          item._id,
+                          `${item.selectedSize[0]}`
+                        )
+                      }
+                      style={{ marginRight: "20px", cursor: "pointer" }}
+                    />
+                  )}
                   <span style={{ marginRight: "20px" }}> {item.count} </span>
-                  <MinusOutlined
-                    onClick={() => onChangeProductAmount("delete")}
-                    style={{ cursor: "pointer" }}
-                  />
+                  {onChangeProductAmount && (
+                    <MinusOutlined
+                      onClick={() => onChangeProductAmount("delete")}
+                      style={{ cursor: "pointer" }}
+                    />
+                  )}
+                  {secondHandler && (
+                    <MinusOutlined
+                      onClick={() =>
+                        secondHandler(
+                          "delete",
+                          item._id,
+                          `${item.selectedSize[0]}`
+                        )
+                      }
+                      style={{ cursor: "pointer" }}
+                    />
+                  )}
                 </div>
               </Col>
               <Col sm={6}>
